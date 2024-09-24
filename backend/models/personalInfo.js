@@ -14,10 +14,6 @@ const PersonalInfoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  email: {
-    type: String,
-    required: true,
-  },
   phone: {
     type: String,
   },

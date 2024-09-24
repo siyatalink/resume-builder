@@ -6,16 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-// Define the props interface
 interface AuthFormProps {
-  onClose: () => void;  // Specify that onClose is a function that returns void
+  onClose: () => void;
 }
 
 export default function AuthForm({ onClose }: AuthFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState('signup'); // 'signup', 'login', or 'complete'
+  const [step, setStep] = useState('signup');
   const router = useRouter();
 
   const API_URL = "http://localhost:3005/api";  
@@ -36,7 +35,7 @@ export default function AuthForm({ onClose }: AuthFormProps) {
       const data = await response.json();
       if (response.ok) {
         console.log('Signed up:', data);
-        setStep('login'); // Proceed to the login step
+        setStep('login');
       } else {
         console.error('Signup error:', data.message);
       }
@@ -63,7 +62,9 @@ export default function AuthForm({ onClose }: AuthFormProps) {
       const data = await response.json();
       if (response.ok) {
         console.log('Logged in:', data);
-        setStep('complete'); // Proceed to the complete step
+        localStorage.setItem('token', data.token); // Store the token
+        sessionStorage.setItem('token', data.token); // Also store in sessionStorage
+        setStep('complete');
       } else {
         console.error('Login error:', data.message);
       }
@@ -75,7 +76,7 @@ export default function AuthForm({ onClose }: AuthFormProps) {
   };
 
   const handleComplete = () => {
-    onClose(); // Close the dialog
+    onClose();
     router.push('/personal-info');
   };
 
