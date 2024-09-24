@@ -6,25 +6,40 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function AuthForm({ onClose }) {
+// Define the props interface
+interface AuthFormProps {
+  onClose: () => void;  // Specify that onClose is a function that returns void
+}
+
+export default function AuthForm({ onClose }: AuthFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState('signup'); // 'signup', 'login', or 'complete'
   const router = useRouter();
 
-  const simulateAuth = async () => {
-    // Simulate an API call
-    return new Promise(resolve => setTimeout(resolve, 1000));
-  };
+  const API_URL = "http://localhost:3005/api";  
 
-  const handleSignup = async (e) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+
     try {
-      await simulateAuth();
-      console.log('Signed up:', { email, password });
-      setStep('login');
+      const response = await fetch(`${API_URL}/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Signed up:', data);
+        setStep('login'); // Proceed to the login step
+      } else {
+        console.error('Signup error:', data.message);
+      }
     } catch (error) {
       console.error('Signup error:', error);
     } finally {
@@ -32,13 +47,26 @@ export default function AuthForm({ onClose }) {
     }
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+
     try {
-      await simulateAuth();
-      console.log('Logged in:', { email, password });
-      setStep('complete');
+      const response = await fetch(`${API_URL}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Logged in:', data);
+        setStep('complete'); // Proceed to the complete step
+      } else {
+        console.error('Login error:', data.message);
+      }
     } catch (error) {
       console.error('Login error:', error);
     } finally {
