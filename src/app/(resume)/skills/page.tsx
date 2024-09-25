@@ -15,7 +15,7 @@ const SkillsAndProjects = () => {
     setSkills([...skills, '']);
   };
 
-  const handleSkillChange = (index, value) => {
+  const handleSkillChange = (index: number, value: string) => {
     const updatedSkills = skills.map((skill, i) => 
       i === index ? value : skill
     );
@@ -26,7 +26,7 @@ const SkillsAndProjects = () => {
     setProjects([...projects, { name: '', description: '' }]);
   };
 
-  const handleProjectChange = (index, field, value) => {
+  const handleProjectChange = (index: number, field: string, value: string) => {
     const updatedProjects = projects.map((project, i) => 
       i === index ? { ...project, [field]: value } : project
     );

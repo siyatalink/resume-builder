@@ -1,43 +1,48 @@
 "use client";
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 const Navbar: React.FC = () => {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isLoggedIn, logout } = useAuth();
+  const [showLogout, setShowLogout] = useState(false);
+
+  useEffect(() => {
+    // Check if the user is on a logged-in only page
+    const loggedInOnlyPages = ['/personal-info', '/work-exp'];
+    setShowLogout(isLoggedIn || loggedInOnlyPages.some(page => pathname.startsWith(page)));
+  }, [pathname, isLoggedIn]);
+
+  const handleLogout = () => {
+    logout();
+    router.push('/');
+  };
 
   return (
-    <nav className="bg-white border-b-2 shadow-sm">
-      <div className="container mx-auto flex justify-between items-center py-4 px-6">
-        <div className="text-xl font-bold">
-          <Link href="/" className="flex items-center space-x-2">
-            <span>📄</span>
-            <span className="text-gray-700">Resume Builder</span>
-          </Link>
-        </div>
-        <div className="flex space-x-6">
-          <Link
-            href="/templates"
-            className={`${
-              pathname === '/templates'
-                ? 'text-red-500'
-                : 'text-gray-700'
-            } hover:text-red-500`}
-          >
-            Templates
-          </Link>
-          <Link
-            href="/account"
-            className={`${
-              pathname === '/account'
-                ? 'text-red-500'
-                : 'text-gray-700'
-            } hover:text-red-500`}
-          >
-            <span className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+    <nav className="bg-white-500 p-4">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link href="/" className="text-gray-800 font-bold text-xl">
+          📄 Resume Builder
+        </Link>
+        <div className="space-x-4">
+          {!showLogout && (
+            <Link href="/templates" className="text-gray-800 hover:text-gray-300">
+              Templates
+            </Link>
+          )}
+          {showLogout ? (
+            <button onClick={handleLogout} className="text-white hover:text-gray-300 bg-red-500 hover:bg-red-700 py-2 px-4 rounded">
+              Logout
+            </button>
+          ) : (
+            <Link href="/account" className="text-white hover:text-white-300 bg-red-500 hover:bg-red-700 py-2 px-4 rounded">
               Account
-            </span>
-          </Link>
+            </Link>
+          )}
         </div>
       </div>
     </nav>

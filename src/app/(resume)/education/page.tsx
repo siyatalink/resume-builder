@@ -26,7 +26,7 @@ const Education = () => {
     }]);
   };
 
-  const handleInputChange = (index, field, value) => {
+  const handleInputChange = (index: number, field: string, value: string) => {
     const updatedSchools = schools.map((school, i) => 
       i === index ? { ...school, [field]: value } : school
     );

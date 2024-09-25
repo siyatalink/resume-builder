@@ -1,14 +1,17 @@
-import './globals.css'; // Global CSS import
-import Navbar from '@/components/Navbar'; // Import your Navbar component
+// layout.tsx or _app.tsx (depending on your setup)
+import './globals.css';
+import Navbar from '@/components/Navbar';
 import { ReactNode } from 'react';
+import { AuthProvider } from '@/context/AuthContext'; // Import the AuthProvider
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        {/* Navbar should be included here */}
-        <Navbar />
-        {children}
+        <AuthProvider>
+          <Navbar />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
